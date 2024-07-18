@@ -1,56 +1,40 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { useChartData } from '../hooks/useChartData';
+import Chart from './Chart';
+import FarmCountChart from './FarmCountChart';
 
-export const ChartSection: React.FC = () => {
-  const chartData = useChartData();
-
+export const ChartSection: React.FC<{ results: any, weeklyFarmCount: {week: string, value: number}[]; }> = ({ results, weeklyFarmCount }) => {
+  const chartData = results.weeklyData;
+  const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
+  const slopeOfEstimate = currFarmCountData.value / Number(currFarmCountData.week);
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Number of Solar Farms Over Time</h3>
-        <LineChart width={500} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="value" stroke="#8884d8" />
-        </LineChart>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Cumulative Rewards in Glow Tokens</h3>
-        <LineChart width={500} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="value" stroke="#82ca9d" />
-        </LineChart>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Cumulative Rewards in USDC</h3>
-        <LineChart width={500} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="value" stroke="#ffc658" />
-        </LineChart>
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Cumulative Value of Electricity Produced</h3>
-        <LineChart width={500} height={300} data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="value" stroke="#ff7300" />
-        </LineChart>
-      </div>
+      <FarmCountChart 
+        title="Weekly Farm Count" 
+        data={weeklyFarmCount} 
+      />
+      <Chart 
+        title="Weekly Rewards"
+        data={chartData}
+        chartType="composed"
+        dataKeys={['weeklyUSDCRevenue', 'weeklyTokenRevenue']}
+        colors={['#82ca9d', '#8884d8']}
+      />
+      <Chart 
+        title="Cumulative Rewards"
+        data={chartData}
+        chartType="composed"
+        dataKeys={['totalTokenRevenue', 'totalUSDCRevenue']}
+        colors={['#ffc658', '#82ca9d']}
+      />
+      <Chart 
+        title="Cumulative Value of Electricity Produced"
+        data={chartData}
+        chartType="line"
+        dataKeys={['totalElectricityRevenue']}
+        colors={['#ff7300']}
+      />
     </div>
   );
 };
+

@@ -1,17 +1,17 @@
 import React from 'react';
 import { FormData } from '../types';
-import { VIEW_REWARDS_OPTIONS } from '../constants';
 
 interface FormSectionProps {
   formData: FormData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleSliderChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent) => void;
+  handleSubmit: (results: any) => void;
 }
 
 export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputChange, handleSliderChange, handleSubmit }) => {
+
   return (
-    <form onSubmit={handleSubmit} className="mb-8">
+    <form action={handleSubmit} className="mb-8">
       <h2 className="text-xl font-semibold mb-2">Enter farm information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

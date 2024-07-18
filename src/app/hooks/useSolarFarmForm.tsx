@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FormData } from '../types';
+import { getEstimate } from '../actions/actions';
 
 export const useSolarFarmForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -11,6 +12,7 @@ export const useSolarFarmForm = () => {
   });
 
   const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState<any>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -21,11 +23,11 @@ export const useSolarFarmForm = () => {
     setFormData({ ...formData, dilutionRate: parseFloat(e.target.value) });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (formData:any) => {
+    const results = await getEstimate(formData)
     setShowResults(true);
-    // API call or calculations would go here
+    setResults(results);
   };
 
-  return { formData, handleInputChange, handleSliderChange, handleSubmit, showResults };
+  return { formData, handleInputChange, handleSliderChange, handleSubmit, showResults, results };
 };
