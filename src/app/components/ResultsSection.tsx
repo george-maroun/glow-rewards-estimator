@@ -13,8 +13,12 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, result
   return (
     <div className="results">
       <h2 className="text-xl font-semibold mb-4">Rewards</h2>
-      <RewardsDisplay viewRewardsAfter={formData.viewRewardsAfter} />
-      <ChartSection results={results} weeklyFarmCount={weeklyFarmCount}/>
+      <RewardsDisplay results={results} />
+      <ChartSection 
+        results={results} 
+        weeklyFarmCount={weeklyFarmCount}
+        dilutionRate={formData.dilutionRate}
+      />
     </div>
   );
 };

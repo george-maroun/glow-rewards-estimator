@@ -1,17 +1,37 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { use, useEffect } from 'react';
 import { FormSection } from './FormSection';
 import { ResultsSection } from './ResultsSection';
 import { useSolarFarmForm } from '../hooks/useSolarFarmForm';
+import calculateRewards from '../utils/estimateRewardsHelper';
 
 interface SolarFarmDashboardProps {
   weeklyFarmCount: any; // Replace 'any' with a more specific type if possible
 }
 
 const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({weeklyFarmCount}) => {
-  const { formData, handleInputChange, handleSliderChange, handleSubmit, showResults, results } = useSolarFarmForm();
+  const { 
+    formData, 
+    handleInputChange, 
+    handleSliderChange, 
+    handleSubmit, 
+    handleSetEstimatedSlope,
+    showResults, 
+    results 
+  } = useSolarFarmForm();
 
+  useEffect(() => {
+    const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
+    const slopeOfEstimate = Number(currFarmCountData.value) / Number(currFarmCountData.week);
+    handleSetEstimatedSlope(slopeOfEstimate);
+  }, [weeklyFarmCount]);
+
+  useEffect(() => {
+    if (showResults) {
+      handleSubmit()
+    }
+  }, [weeklyFarmCount, formData]);
 
   return (
     <div className="container mx-auto p-4">

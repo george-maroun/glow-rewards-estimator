@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -14,17 +14,47 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 
-const FarmCountChart: React.FC<{
+interface DataPoint {
+  week: number;
+  value: number;
+}
+
+interface FarmCountChartProps {
   title: string;
   data: any;
-}> = ({ title, data }) => {
+  slopeOfEstimate: number;
+  startX: number;
+  endX: number;
+}
+
+const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEstimate, startX, endX }) => {
+  // Calculate the y values for the start and end points of the estimate line
+  const startY = Math.round(slopeOfEstimate * startX);
+  const endY = Math.round(slopeOfEstimate * endX);
+
+  // // Find the maximum value in the data
+  // const maxDataValue = Number(data[data.length - 1].value);
+  // console.log(maxDataValue);
+
+  // // Calculate the maximum Y value needed for the chart
+  // const maxY = Math.max(maxDataValue, endY);
+  // console.log("hello", maxDataValue);
+
+
+  // Find the maximum week in the data
+  const maxWeek = Number(data[data.length - 1].week);
+
   return (
     <div>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <LineChart width={500} height={300} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="week" />
-        <YAxis />
+        <XAxis 
+          dataKey="week" 
+          domain={[0, endX]}
+          type="number"
+        />
+        <YAxis domain={[0, endY]} />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
         <Line 
@@ -33,6 +63,13 @@ const FarmCountChart: React.FC<{
           stroke="#8884d8"
           dot={false}
           activeDot={{ r: 4 }}
+          name="Actual"
+        />
+        <ReferenceLine 
+          segment={[{ x: 0, y: 0 }, { x: endX, y: endY }]} 
+          stroke="red" 
+          strokeDasharray="3 3"
+          label={{ value: 'Estimate', position: 'insideTopRight' }}
         />
       </LineChart>
     </div>

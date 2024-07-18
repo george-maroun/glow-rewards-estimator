@@ -1,38 +1,29 @@
-type InputData = {
-  initialInvestment: number;
-  installationCost: number;
-  protocolFee: number;
-  numberOfPanels: number;
-  electricityPricePerKWh: number;
-  powerProductionPerWeek: number;
-  carbonCreditProductionPerWeek: number;
-  // Add other input fields as needed
-}
-
-type ResultData = {
-  weeklyData: {
-    week: number;
-    totalUSDCRevenue: number;
-    totalElectricityRevenue: number;
-    totalTokenRevenue: number;
-    weeklyUSDCRevenue: number;
-    weeklyElectricityRevenue: number;
-    weeklyTokenRevenue: number;
-  }[];
-  // Add other result fields as needed
-}
+import { InputData, ResultData } from '../types';
+import calculateProtocolFee from './calculateProtocolFeeHelper';
 
 function calculateRewards(input: InputData): ResultData {
   // Constants
-  const weeklyProtocolFee = input.protocolFee / 192;
+  
   const weeklyRewardConstant = 20000;
   const tokenRewardConstant = 175000;
-  const numWeeks = 4 * 52;
-  const startWeek = 34;
-
+  // TODO: Tweaks to the formula
+  const startWeek = input.joiningWeek;
+  const numWeeks = input.endWeek;
+  const { estimatedSlope, dilutionRate } = input;
+  const powerProductionPerWeek = input.capacity * input.avgPeakSunHours * 7;
   // Average farm stats
   const avgProtocolFee = 20000;
   const avgCarbonCreditProductionPerWeek = 0.08884375;
+
+  const protocolFee = calculateProtocolFee(
+    input.electricityPricePerKWh, 
+    input.avgPeakSunHours, 
+    input.capacity,
+    );
+
+  const weeklyProtocolFee = protocolFee / 192;
+
+  console.log('protocolFee', protocolFee);
 
   // Initialize arrays to store weekly data
   const weeks: number[] = [];
@@ -47,7 +38,7 @@ function calculateRewards(input: InputData): ResultData {
 
   for (let week = startWeek; week <= numWeeks; week++) {
     weeks.push(week);
-    const currentNumFarms = Math.round(4 * week - 29.429);
+    const currentNumFarms = Math.round(dilutionRate * estimatedSlope * week);
     numFarms.push(currentNumFarms);
     
     const totalProtocolFee = currentNumFarms * weeklyProtocolFee;
@@ -59,10 +50,10 @@ function calculateRewards(input: InputData): ResultData {
     const weeklyUSDCReward = (input.carbonCreditProductionPerWeek / totalCarbonCreditsPerWeek) * weeklyRewardConstant;
     weeklyUSDCRewards.push(weeklyUSDCReward);
 
-    const weeklyTokenReward = tokenRewardConstant * (input.protocolFee / totalProtocolFeePerWeek);
+    const weeklyTokenReward = tokenRewardConstant * (protocolFee / totalProtocolFeePerWeek);
     weeklyTokenRewards.push(weeklyTokenReward);
 
-    const weeklyElectricityRevenue = input.powerProductionPerWeek * input.electricityPricePerKWh;
+    const weeklyElectricityRevenue = powerProductionPerWeek * input.electricityPricePerKWh;
     weeklyElectricityRevenues.push(weeklyElectricityRevenue);
 
     const totalUSDCRevenue = weeklyUSDCRewards.reduce((a, b) => a + b, 0);

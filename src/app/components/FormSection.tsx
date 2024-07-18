@@ -28,12 +28,36 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
             />
           </div>
           <div>
-            <label htmlFor="capacity" className="block">Solar Farm Capacity (watts)</label>
+            <label htmlFor="electricityPriceKWh" className="block">Electricity Price per kWh</label>
+            <input
+              type="number"
+              id="electricityPriceKWh"
+              name="electricityPriceKWh"
+              value={formData.electricityPriceKWh}
+              onChange={handleInputChange}
+              className="w-full border rounded px-2 py-1"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="capacity" className="block">AC Output (kW)</label>
             <input
               type="number"
               id="capacity"
               name="capacity"
               value={formData.capacity}
+              onChange={handleInputChange}
+              className="w-full border rounded px-2 py-1"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="avgPeakSunHours" className="block">Average Peak Sun Hours</label>
+            <input
+              type="number"
+              id="avg_peak_sun_hours"
+              name="avgPeakSunHours"
+              value={formData.avgPeakSunHours}
               onChange={handleInputChange}
               className="w-full border rounded px-2 py-1"
               required
@@ -57,15 +81,24 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
               type="range"
               id="dilutionRate"
               name="dilutionRate"
-              min="0"
-              max="1"
-              step="0.01"
-              value={formData.dilutionRate}
-              onChange={handleSliderChange}
+              min="-1"  // log10(0.1)
+              max="1.3"  // log10(20)
+              step="0.05"
+              value={Math.log10(formData.dilutionRate)}
+              onChange={(e) => {
+                const logValue = parseFloat(e.target.value);
+                const actualValue = Math.pow(10, logValue);
+                handleSliderChange({
+                  target: {
+                    ...e.target,
+                    value: actualValue.toFixed(2)
+                  }
+                } as React.ChangeEvent<HTMLInputElement>);
+              }}
               className="w-full"
             />
           </div>
-          <div>
+          {/* <div>
             <label htmlFor="viewRewardsAfter" className="block">View Rewards After</label>
             <select
               id="viewRewardsAfter"
@@ -81,7 +114,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
               <option value="4Y">4 Years</option>
               <option value="10Y">10 Years</option>
             </select>
-          </div>
+          </div> */}
         </div>
       </div>
       <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
