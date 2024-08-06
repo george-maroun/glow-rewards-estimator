@@ -5,6 +5,7 @@ import { FormSection } from './FormSection';
 import { ResultsSection } from './ResultsSection';
 import { useSolarFarmForm } from '../hooks/useSolarFarmForm';
 import calculateRewards from '../utils/estimateRewardsHelper';
+import getCarbonCreditHelper from '../utils/getCarbonCreditHelper';
 
 interface SolarFarmDashboardProps {
   weeklyFarmCount: any; // Replace 'any' with a more specific type if possible
@@ -32,6 +33,17 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({weeklyFarmCount}
       handleSubmit()
     }
   }, [weeklyFarmCount, formData]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      
+      const {average_sunlight, average_carbon_certificates} = await getCarbonCreditHelper();
+
+    }
+
+    if (formData)
+    fetchData();
+  }, [formData.zipCode]);
 
   return (
     <div className="container mx-auto p-4">

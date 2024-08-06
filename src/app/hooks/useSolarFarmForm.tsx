@@ -5,7 +5,7 @@ import calculateRewards from '../utils/estimateRewardsHelper'
 
 export const useSolarFarmForm = () => {
   const [formData, setFormData] = useState<FormData>({
-    location: '',
+    zipCode: '',
     capacity: 0,
     joiningDate: '',
     dilutionRate: 1,

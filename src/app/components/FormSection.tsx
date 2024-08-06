@@ -16,12 +16,12 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="location" className="block">Location</label>
+            <label htmlFor="zipCode" className="block">Zip code</label>
             <input
               type="text"
-              id="location"
-              name="location"
-              value={formData.location}
+              id="zipCode"
+              name="zipCode"
+              value={formData.zipCode}
               onChange={handleInputChange}
               className="w-full border rounded px-2 py-1"
               required
@@ -40,7 +40,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
             />
           </div>
           <div>
-            <label htmlFor="capacity" className="block">AC Output (kW)</label>
+            <label htmlFor="capacity" className="block">DC Output (kW)</label>
             <input
               type="number"
               id="capacity"

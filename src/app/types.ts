@@ -1,5 +1,5 @@
 export interface FormData {
-  location: string;
+  zipCode: string;
   capacity: number;
   joiningDate: string;
   dilutionRate: number;
