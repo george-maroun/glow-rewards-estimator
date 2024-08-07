@@ -6,20 +6,24 @@ interface ChartSectionProps {
   results: any;
   weeklyFarmCount: {week: string, value: number}[];
   dilutionRate?: number;
+  estimatedSlope: number;
 }
 
 export const ChartSection: React.FC<ChartSectionProps> = (
   { 
     results, 
     weeklyFarmCount,
-    dilutionRate=1
+    dilutionRate=1,
+    estimatedSlope
   }) => {
   const chartData = results.weeklyData;
-  const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
-  const slopeOfEstimate = Number(currFarmCountData.value) / (Number(currFarmCountData.week) - 16) * dilutionRate;
+  // const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
+  const slopeOfEstimate = estimatedSlope * dilutionRate;
 
-  const startX = 34;
-  const endX = 208;
+  console.log({chartData})
+
+  const startX = chartData[0].week;
+  const endX = chartData[chartData.length - 1].week;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

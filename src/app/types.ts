@@ -8,6 +8,11 @@ export interface FormData {
   electricityPriceKWh: number;
 }
 
+export interface ProtocolFee {
+  id: string;
+  totalPayments: string;
+}
+
 export type InputData = {
   electricityPricePerKWh: number;
   carbonCreditProductionPerWeek: number;

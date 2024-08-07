@@ -10,7 +10,7 @@ import getWeeksSinceStart from '../utils/getWeeksSinceStart';
 
 interface SolarFarmDashboardProps {
   weeklyFarmCount: Array<{ week: string; value: number }>;
-  weeklyUSDCRewards: any;
+  weeklyProtocolFees: any;
 }
 
 interface FormData {
@@ -18,32 +18,27 @@ interface FormData {
   capacity: number;
   joiningDate: string;
   dilutionRate: number;
-  avgPeakSunHours: number;
-  estimatedSlope: number;
   electricityPriceKWh: number;
 }
 
-const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyUSDCRewards }) => {
+const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees }) => {
   const [formData, setFormData] = useState<FormData>({
     zipCode: '',
     capacity: 0,
     joiningDate: '',
     dilutionRate: 1,
-    avgPeakSunHours: 5,
-    estimatedSlope: 1,
     electricityPriceKWh: 0.11,
   });
-  const [showResults, setShowResults] = useState(false);
+  const [showResults, setShowResults] = useState(0);
   const [results, setResults] = useState<any>(null);
   const [avgPeakSunHours, setAvgPeakSunHours] = useState(0);
-  const [averageCarbonCertificates, setAverageCarbonCertificates] = useState(0);
+  const [carbonCreditsPerMwh, setCarbonCreditsPerMwh] = useState(0);
+  const [state, setState] = useState('');
 
-  useEffect(() => {
-    const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
-    const slopeOfEstimate = Number(currFarmCountData.value) / Number(currFarmCountData.week);
-    setFormData(prev => ({ ...prev, estimatedSlope: slopeOfEstimate }));
-  }, [weeklyFarmCount]);
+  const estimatedSlope = Number(weeklyFarmCount[weeklyFarmCount.length - 1].value) / (Number(weeklyFarmCount[weeklyFarmCount.length - 1].week) - 16);
 
+  
+  
   useEffect(() => {
     if (showResults) {
       handleSubmit();
@@ -55,18 +50,21 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
       if (!formData.zipCode) return;
 
       const locData = await getLocationDataFromZipcode(formData.zipCode);
+      console.log('locData:', locData);
       if (!locData) return;
 
       try {
-        const { lat, lng } = locData;
+        const { lat, lng, state } = locData;
+        setState(state);
         const { average_sunlight, average_carbon_certificates } = await getCarbonCredit(lat, lng);
         setAvgPeakSunHours(average_sunlight);
-        setAverageCarbonCertificates(average_carbon_certificates);   
+        setCarbonCreditsPerMwh(average_carbon_certificates);   
       } catch (error) {
         console.error('Error fetching carbon credit information:', error);
       }
     };
-    fetchData();
+
+    if (formData.zipCode.toString().length === 5) fetchData();
   }, [formData.zipCode]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -83,20 +81,21 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     const endWeek = joiningWeek + 208;
 
     const input = {
+      state: state,
       electricityPricePerKWh: formData.electricityPriceKWh,
-      carbonCreditProductionPerWeek: 0.09,
+      carbonCreditsPerMwh: carbonCreditsPerMwh,
       dilutionRate: Number(formData.dilutionRate),
       joiningWeek,
       endWeek,
-      estimatedSlope: Number(formData.estimatedSlope),
+      estimatedSlope: estimatedSlope,
       avgPeakSunHours: avgPeakSunHours,
       capacity: formData.capacity,
-      weeklyUSDCRewards: weeklyUSDCRewards,
+      pastProtocolFees: weeklyProtocolFees,
     };
 
     const calculatedRewards = await calculateRewards(input);
     
-    setShowResults(true);
+    setShowResults(prev => prev + 1);
     setResults(calculatedRewards);
   };
 
@@ -109,7 +108,13 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         handleSliderChange={handleSliderChange}
         handleSubmit={handleSubmit}
       />
-      {showResults && <ResultsSection weeklyFarmCount={weeklyFarmCount} formData={formData} results={results} />}
+      {showResults > 0 ?
+      <ResultsSection 
+        weeklyFarmCount={weeklyFarmCount} 
+        formData={formData} 
+        results={results} 
+        estimatedSlope={estimatedSlope}
+      /> : null}
     </div>
   );
 };

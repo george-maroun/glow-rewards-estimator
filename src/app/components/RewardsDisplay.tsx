@@ -78,7 +78,7 @@ export const RewardsDisplay: React.FC<any> = ({
 
   return (
     <div className="my-8">
-      <h3 className="text-lg font-semibold mb-2">Total Rewards Received</h3>
+      <h3 className="text-lg font-semibold mb-2">Total Rewards Received Over 4 Years</h3>
       <table className="w-full border-collapse border border-gray-300 max-w-[800px]">
         <thead>
           <tr className="bg-gray-100">

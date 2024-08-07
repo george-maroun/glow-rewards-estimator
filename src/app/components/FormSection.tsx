@@ -2,7 +2,7 @@ import React from 'react';
 import { FormData } from '../types';
 
 interface FormSectionProps {
-  formData: FormData;
+  formData: any;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleSliderChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (results: any) => void;

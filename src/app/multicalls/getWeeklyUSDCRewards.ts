@@ -1,7 +1,7 @@
 import { PublicClient } from 'viem'
 import { minerPoolAndGCAAbi } from '../constants/abis/MinerPoolAndGCA.abi'
 import { addresses } from '../constants/addresses'
-
+// TODO: Delete this file
 /**
  * Get weekly rewards for a given week range
  * @param client - the viem client
@@ -29,38 +29,39 @@ export async function getWeeklyRewardsForWeeksMulticall({
   weekStart,
   weekEnd,
 }: GetWeeklyRewardsForWeeksArgs) {
-  const contract = {
-    address: addresses.gcaAndMinerPoolContract,
-    abi: minerPoolAndGCAAbi,
-  }
-  const results = await client.multicall({
-    contracts: Array.from({ length: weekEnd - weekStart + 1 }, (_, i) => ({
-      ...contract,
-      functionName: 'reward',
-      args: [weekStart + i],
-    })),
-  })
+  // const contract = {
+  //   address: addresses.gcaAndMinerPoolContract,
+  //   abi: minerPoolAndGCAAbi,
+  // }
+  // const results = await client.multicall({
+  //   contracts: Array.from({ length: weekEnd - weekStart + 1 }, (_, i) => ({
+  //     ...contract,
+  //     functionName: 'reward',
+  //     args: [weekStart + i],
+  //   })),
+  // })
 
-  const rewards: RewardWithWeekSerialized[] = []
+  // const rewards: RewardWithWeekSerialized[] = []
 
-  for (let i = 0; i < results.length; i++) {
-    const result = results[i]
-    if (result.error) {
-      //push a 0
-      rewards.push({
-        amountInBucket: '0',
-        amountToDeduct: '0',
-        weekNumber: weekStart + rewards.length,
-      })
-      continue
-    }
-    const res = result.result! as RewardCallResult
-    rewards.push({
-      amountInBucket: res.amountInBucket.toString(),
-      amountToDeduct: res.amountToDeduct.toString(),
-      weekNumber: weekStart + rewards.length,
-    })
-  }
+  // for (let i = 0; i < results.length; i++) {
+  //   const result = results[i]
+  //   if (result.error) {
+  //     //push a 0
+  //     rewards.push({
+  //       amountInBucket: '0',
+  //       amountToDeduct: '0',
+  //       weekNumber: weekStart + rewards.length,
+  //     })
+  //     continue
+  //   }
+  //   const res = result.result! as RewardCallResult
+  //   rewards.push({
+  //     amountInBucket: res.amountInBucket.toString(),
+  //     amountToDeduct: res.amountToDeduct.toString(),
+  //     weekNumber: weekStart + rewards.length,
+  //   })
+  // }
 
-  return rewards
+  // return rewards
+  return {};
 }

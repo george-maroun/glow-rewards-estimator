@@ -27,7 +27,7 @@ interface FarmCountChartProps {
   endX: number;
 }
 
-const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEstimate, startX, endX }) => {
+const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEstimate, endX }) => {
   // Calculate the y values for the start and end points of the estimate line
   const endY = Math.round(slopeOfEstimate * endX);
 

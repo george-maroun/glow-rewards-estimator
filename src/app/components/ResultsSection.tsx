@@ -4,12 +4,13 @@ import { RewardsDisplay } from './RewardsDisplay';
 import { ChartSection } from './ChartSection';
 
 interface ResultsSectionProps {
-  formData: FormData;
+  formData: any;
   results: any;
   weeklyFarmCount: {week: string, value: number}[];
+  estimatedSlope: number;
 }
 
-export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, results, weeklyFarmCount }) => {
+export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, results, weeklyFarmCount, estimatedSlope }) => {
   return (
     <div className="results">
       <h2 className="text-xl font-semibold mb-4">Rewards</h2>
@@ -18,6 +19,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, result
         results={results} 
         weeklyFarmCount={weeklyFarmCount}
         dilutionRate={formData.dilutionRate}
+        estimatedSlope={estimatedSlope}
       />
     </div>
   );
