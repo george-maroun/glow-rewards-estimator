@@ -1,20 +1,20 @@
-// import { edenTreaty } from "@elysiajs/eden";
-// import { type ApiType } from "@glowlabs-org/crm-bindings";
-
-// if (!process.env.NEXT_PUBLIC_CRM_API) {
-//   throw new Error("Missing NEXT_PUBLIC_CRM_API env variable");
-// }
-
-// // export const apiClient = edenTreaty<ApiType>("http://localhost:3005");
-// export const apiClient = edenTreaty<ApiType>(process.env.NEXT_PUBLIC_CRM_API);
-
+// TODO: Remove mock data and implement the actual API call
+// TODO: Implement a caching mechanism to avoid calling the API multiple times
 const getCarbonCredit = async (lat:number, lon:number) => {
-  // const response = await fetch(`http://95.217.194.59:35015/api/v1/geo-stats?latitude=${lat}&longitude=${lon}`);
-  // const data = await response.json();
-  // return data;
-  return {
-    average_sunlight: 4.696276712328763,
-    average_carbon_certificates: 0.407455669122476
+  console.log('lat:', lat);
+  console.log('lon:', lon);
+  try {
+    // const response = await fetch(`http://95.217.194.59:35015/api/v1/geo-stats?latitude=${lat}&longitude=${lon}`);
+    const response = await fetch(`https://api.carbonkit.net/`);
+    const data = await response.json();
+    console.log('data:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching carbon credit information:', error);
+    return {
+      average_sunlight: 4.696276712328763,
+      average_carbon_certificates: 0.407455669122476
+    }
   }
 }
 

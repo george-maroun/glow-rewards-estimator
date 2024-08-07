@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormData } from '../types';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { InfoIcon } from 'lucide-react';
 
 interface FormSectionProps {
   formData: any;
@@ -64,7 +66,24 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
             />
           </div>
           <div>
-            <label htmlFor="dilutionRate" className="block">Dilution Rate: {formData.dilutionRate}</label>
+            <label htmlFor="dilutionRate" className="block flex items-center">
+              Dilution Rate: {formData.dilutionRate}
+              <TooltipProvider>
+                <Tooltip delayDuration={60}>
+                  <TooltipTrigger>
+                    <InfoIcon className="ml-2 h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      The dilution rate represents the expected frequency of enrollment of new solar farms in the Glow protocol. 
+                      As new farms are added, rewards are divided between more farms. A higher rate indicates 
+                      more farms are expected to join over time. A value of 1 represents the current frequency of 
+                      new solar farm additions.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </label>
             <input
               type="range"
               id="dilutionRate"
