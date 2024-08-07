@@ -29,20 +29,7 @@ interface FarmCountChartProps {
 
 const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEstimate, startX, endX }) => {
   // Calculate the y values for the start and end points of the estimate line
-  const startY = Math.round(slopeOfEstimate * startX);
   const endY = Math.round(slopeOfEstimate * endX);
-
-  // // Find the maximum value in the data
-  // const maxDataValue = Number(data[data.length - 1].value);
-  // console.log(maxDataValue);
-
-  // // Calculate the maximum Y value needed for the chart
-  // const maxY = Math.max(maxDataValue, endY);
-  // console.log("hello", maxDataValue);
-
-
-  // Find the maximum week in the data
-  const maxWeek = Number(data[data.length - 1].week);
 
   return (
     <div>
@@ -66,7 +53,7 @@ const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEst
           name="Actual"
         />
         <ReferenceLine 
-          segment={[{ x: 0, y: 0 }, { x: endX, y: endY }]} 
+          segment={[{ x: 16, y: 0 }, { x: endX, y: endY }]} 
           stroke="red" 
           strokeDasharray="3 3"
           label={{ value: 'Estimate', position: 'insideTopRight' }}

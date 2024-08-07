@@ -1,4 +1,4 @@
-interface ZipCodeInfo {
+interface LocationData {
   country: string;
   state: string;
   city: string;
@@ -6,7 +6,7 @@ interface ZipCodeInfo {
   lng: number;
 }
 
-async function getZipCodeInfo(zipCode: string): Promise<ZipCodeInfo | null> {
+async function getLocationDataFromZipcode(zipCode: string): Promise<LocationData | null> {
   try {
     const response = await fetch(`https://api.zippopotam.us/us/${zipCode}`);
     const data = await response.json();
@@ -28,3 +28,5 @@ async function getZipCodeInfo(zipCode: string): Promise<ZipCodeInfo | null> {
     return null;
   }
 }
+
+export default getLocationDataFromZipcode;

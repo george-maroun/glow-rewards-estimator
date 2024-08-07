@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FormData } from '../types';
-import getWeeksSinceStart from '../utils/getWeeksSinceStartHelper';
-import calculateRewards from '../utils/estimateRewardsHelper'
+import getWeeksSinceStart from '../utils/getWeeksSinceStart';
+import calculateRewards from '../utils/estimateRewards'
 
 export const useSolarFarmForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -35,10 +35,6 @@ export const useSolarFarmForm = () => {
     const endWeek = joiningWeek + 208;
 
     const input:any = {
-      initialInvestment: 50000,
-      installationCost: 30000,
-      protocolFee: 20000,
-      numberOfPanels: 42,
       electricityPricePerKWh: formData.electricityPriceKWh,
       carbonCreditProductionPerWeek: 0.09,
       dilutionRate: Number(formData.dilutionRate),
@@ -48,10 +44,11 @@ export const useSolarFarmForm = () => {
       avgPeakSunHours: formData.avgPeakSunHours,
       capacity: formData.capacity,
     }
-    const results = await calculateRewards(input);
+
+    const calculatedRewards = await calculateRewards(input);
     
     setShowResults(true);
-    setResults(results);
+    setResults(calculatedRewards);
   };
 
   return { formData, handleInputChange, handleSliderChange, handleSubmit, handleSetEstimatedSlope, showResults, results };

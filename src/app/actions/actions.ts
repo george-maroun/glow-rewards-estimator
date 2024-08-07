@@ -1,6 +1,6 @@
 'use server'
 
-import calculateRewards from '../utils/estimateRewardsHelper';
+import calculateRewards from '../utils/estimateRewards';
 
 import type { InputData, FormData } from '../types';
  

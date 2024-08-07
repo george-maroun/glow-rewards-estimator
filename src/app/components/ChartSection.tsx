@@ -16,7 +16,7 @@ export const ChartSection: React.FC<ChartSectionProps> = (
   }) => {
   const chartData = results.weeklyData;
   const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
-  const slopeOfEstimate = Number(currFarmCountData.value) / Number(currFarmCountData.week) * dilutionRate;
+  const slopeOfEstimate = Number(currFarmCountData.value) / (Number(currFarmCountData.week) - 16) * dilutionRate;
 
   const startX = 34;
   const endX = 208;

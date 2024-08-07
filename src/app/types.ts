@@ -9,10 +9,6 @@ export interface FormData {
 }
 
 export type InputData = {
-  initialInvestment: number;
-  installationCost: number;
-  protocolFee: number;
-  numberOfPanels: number;
   electricityPricePerKWh: number;
   carbonCreditProductionPerWeek: number;
   // Add other input fields as needed
