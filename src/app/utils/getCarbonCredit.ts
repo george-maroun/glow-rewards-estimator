@@ -1,5 +1,6 @@
 // TODO: Remove mock data and implement the actual API call
 // TODO: Implement a caching mechanism to avoid calling the API multiple times
+
 const getCarbonCredit = async (lat:number, lon:number) => {
   console.log('lat:', lat);
   console.log('lon:', lon);
