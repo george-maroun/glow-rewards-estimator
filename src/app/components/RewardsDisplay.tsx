@@ -85,7 +85,7 @@ export const RewardsDisplay: React.FC<any> = ({
             <th className="border border-gray-300 p-2">Year</th>
             <th className="border border-gray-300 p-2">Glow Tokens</th>
             <th className="border border-gray-300 p-2">USDC</th>
-            <th className="border border-gray-300 p-2">Electricity Revenue</th>
+            <th className="border border-gray-300 p-2">Electricity Produced Value</th>
           </tr>
         </thead>
         <tbody>

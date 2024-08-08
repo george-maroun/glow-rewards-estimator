@@ -3,7 +3,7 @@ import Chart from './Chart';
 import FarmCountChart from './FarmCountChart';
 
 interface ChartSectionProps {
-  results: any;
+  weeklyData: any;
   weeklyFarmCount: {week: string, value: number}[];
   dilutionRate?: number;
   estimatedSlope: number;
@@ -11,12 +11,12 @@ interface ChartSectionProps {
 
 export const ChartSection: React.FC<ChartSectionProps> = (
   { 
-    results, 
+    weeklyData, 
     weeklyFarmCount,
     dilutionRate=1,
     estimatedSlope
   }) => {
-  const chartData = results.weeklyData;
+  const chartData = weeklyData;
   // const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
   const slopeOfEstimate = estimatedSlope * dilutionRate;
 

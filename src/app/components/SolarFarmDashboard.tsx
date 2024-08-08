@@ -3,9 +3,9 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { FormSection } from './FormSection';
 import { ResultsSection } from './ResultsSection';
-import calculateRewards from '../utils/estimateRewards';
-import getCarbonCredit from '../utils/getCarbonCredit';
-import getLocationDataFromZipcode from '../utils/getLocationDataFromZipcode';
+import estimateRewards from '../utils/estimateRewards';
+import { getCarbonCredit } from '../actions/actions';
+// import getLocationDataFromZipcode from '../utils/getLocationDataFromZipcode';
 import getWeeksSinceStart from '../utils/getWeeksSinceStart';
 import debounce from 'lodash/debounce';
 
@@ -23,8 +23,8 @@ interface FormData {
 }
 
 interface CarbonCreditData {
-  avgPeakSunHours: number;
-  carbonCreditsPerMwh: number;
+  average_sunlight: number;
+  average_carbon_certificates: number;
   state: string;
 }
 
@@ -38,61 +38,37 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   });
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<any>(null);
-  const [carbonCreditData, setCarbonCreditData] = useState<CarbonCreditData>({
-    avgPeakSunHours: 0,
-    carbonCreditsPerMwh: 0,
-    state: '',
-  });
+  const [carbonCreditData, setCarbonCreditData] = useState<CarbonCreditData | null>(null);
 
   const estimatedSlope = useMemo(() => {
     const lastWeek = weeklyFarmCount[weeklyFarmCount.length - 1];
     return Number(lastWeek.value) / (Number(lastWeek.week) - 16);
   }, [weeklyFarmCount]);
 
-  // Memoize the getCarbonCredit function to cache results
-  const memoizedGetCarbonCredit = useMemo(() => {
-    const cache = new Map<string, CarbonCreditData>();
-    return async (lat: number, lng: number): Promise<CarbonCreditData> => {
-      const key = `${lat},${lng}`;
-      if (cache.has(key)) {
-        return cache.get(key)!;
+  // Debounced function to fetch carbon credit data
+  const fetchCarbonCreditData = useCallback(
+    debounce(async (zipCode: string) => {
+      if (zipCode.length !== 5) return;
+
+      try {
+        const data = await getCarbonCredit(zipCode);
+        if (data) {
+          setCarbonCreditData(data);
+        } else {
+          console.error('No data returned from getCarbonCredit');
+        }
+      } catch (error) {
+        console.error('Error fetching carbon credit information:', error);
       }
-      const result = await getCarbonCredit(lat, lng);
-      cache.set(key, {
-        avgPeakSunHours: result.average_sunlight,
-        carbonCreditsPerMwh: result.average_carbon_certificates,
-        state: '',  // This will be set later
-      });
-      return cache.get(key)!;
-    };
-  }, []);
-  
-  // Debounced function to fetch location data and carbon credits
-  const fetchData = useCallback(async (zipCode: string) => {
-    if (zipCode.length !== 5) return;
-
-    const locData = await getLocationDataFromZipcode(zipCode);
-    if (!locData) return;
-
-    try {
-      const { lat, lng, state } = locData;
-      const carbonData = await memoizedGetCarbonCredit(lat, lng);
-      setCarbonCreditData({ ...carbonData, state });
-    } catch (error) {
-      console.error('Error fetching carbon credit information:', error);
-    }
-  }, [memoizedGetCarbonCredit]);
-
-  const debouncedFetchData = useMemo(
-    () => debounce(fetchData, 500),
-    [fetchData]
+    }, 500),
+    []
   );
 
   useEffect(() => {
     if (formData.zipCode) {
-      debouncedFetchData(formData.zipCode);
+      fetchCarbonCreditData(formData.zipCode);
     }
-  }, [formData.zipCode, debouncedFetchData]);
+  }, [formData.zipCode, fetchCarbonCreditData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -104,25 +80,32 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   };
 
   const handleSubmit = useCallback(async () => {
+    if (!carbonCreditData) {
+      console.error('Carbon credit data not available');
+      // alert user that carbon credit data is not available
+      alert('Carbon credit data not available');
+      return;
+    }
+
     const joiningWeek = getWeeksSinceStart(formData.joiningDate);
     const endWeek = joiningWeek + 208;
 
     const input = {
       state: carbonCreditData.state,
       electricityPricePerKWh: formData.electricityPriceKWh,
-      carbonCreditsPerMwh: carbonCreditData.carbonCreditsPerMwh,
+      carbonCreditsPerMwh: carbonCreditData.average_carbon_certificates,
       dilutionRate: Number(formData.dilutionRate),
       joiningWeek,
       endWeek,
       estimatedSlope,
-      avgPeakSunHours: carbonCreditData.avgPeakSunHours,
+      avgPeakSunHours: carbonCreditData.average_sunlight,
       capacity: formData.capacity,
       pastProtocolFees: weeklyProtocolFees,
     };
 
-    const calculatedRewards = await calculateRewards(input);
+    const estimatedResults = await estimateRewards(input);
     
-    setResults(calculatedRewards);
+    setResults(estimatedResults);
     setShowResults(true);
   }, [formData, carbonCreditData, estimatedSlope, weeklyProtocolFees]);
 
@@ -135,7 +118,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         handleSliderChange={handleSliderChange}
         handleSubmit={handleSubmit}
       />
-      {showResults &&
+      {showResults && carbonCreditData &&
         <ResultsSection 
           weeklyFarmCount={weeklyFarmCount} 
           formData={formData} 
