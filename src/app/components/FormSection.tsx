@@ -18,7 +18,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="zipCode" className="block">Zip code</label>
+            <label htmlFor="zipCode" className="block">Zip Code</label>
             <input
               type="text"
               id="zipCode"
@@ -67,7 +67,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
           </div>
           <div>
             <label htmlFor="dilutionRate" className="block flex items-center">
-              Dilution Rate: {formData.dilutionRate}
+              Dilution Multiplier: {formData.dilutionRate}
               <TooltipProvider>
                 <Tooltip delayDuration={60}>
                   <TooltipTrigger>
@@ -75,10 +75,9 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs">
-                      The dilution rate represents the expected frequency of enrollment of new solar farms in the Glow protocol. 
-                      As new farms are added, rewards are divided between more farms. A higher rate indicates 
-                      more farms are expected to join over time. A value of 1 represents the current frequency of 
-                      new solar farm additions.
+                      The dilution multiplier is a factor that increases or decreases the rate of new farms joining the Glow protocol.
+                      As more farms join, the rewards are shared among more farms, reducing the rewards for each.
+                      A multiplier of 1 means the rate of new farms joining over time is the same as the current (historic) rate.
                     </p>
                   </TooltipContent>
                 </Tooltip>

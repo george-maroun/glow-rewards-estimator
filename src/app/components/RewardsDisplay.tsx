@@ -14,7 +14,7 @@ interface RewardsOverTheYears {
 }
 
 export const RewardsDisplay: React.FC<any> = ({
-  results
+  weeklyData
 }) => {
 
   const parseResults = () => {
@@ -46,7 +46,7 @@ export const RewardsDisplay: React.FC<any> = ({
       totalUSDCRevenue: 0,
       totalElectricityRevenue: 0,
     };
-    results.weeklyData?.forEach((result: any) => {
+    weeklyData?.forEach((result: any) => {
       i++;
       if (i === 52 || i === 104 || i === 156 || i === 208) {
         const yearKey = i === 52 ? 'yearOne' : i === 104 ? 'yearTwo' : i === 156 ? 'yearThree' : 'yearFour';
@@ -85,7 +85,7 @@ export const RewardsDisplay: React.FC<any> = ({
             <th className="border border-gray-300 p-2">Year</th>
             <th className="border border-gray-300 p-2">Glow Tokens</th>
             <th className="border border-gray-300 p-2">USDC</th>
-            <th className="border border-gray-300 p-2">Electricity Produced Value</th>
+            <th className="border border-gray-300 p-2">Electricity Value</th>
           </tr>
         </thead>
         <tbody>
@@ -97,10 +97,10 @@ export const RewardsDisplay: React.FC<any> = ({
             { year: 'Total', data: totalRewards },
           ].map(({ year, data }) => (
             <tr key={year} className={year === 'Total' ? 'font-bold' : ''}>
-              <td className="border border-gray-300 p-2">{year}</td>
-              <td className="border border-gray-300 p-2">{data.estimatedTokenRevenue.toLocaleString()}</td>
-              <td className="border border-gray-300 p-2">${data.estimatedUSDCRevenue.toLocaleString()}</td>
-              <td className="border border-gray-300 p-2">${data.estimatedElectricityRevenue.toLocaleString()}</td>
+              <td className="border border-gray-300 p-2 text-center">{year}</td>
+              <td className="border border-gray-300 p-2 text-center">{data.estimatedTokenRevenue.toLocaleString()}</td>
+              <td className="border border-gray-300 p-2 text-center">${data.estimatedUSDCRevenue.toLocaleString()}</td>
+              <td className="border border-gray-300 p-2 text-center">${data.estimatedElectricityRevenue.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

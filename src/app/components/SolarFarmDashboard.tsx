@@ -110,7 +110,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   }, [formData, carbonCreditData, estimatedSlope, weeklyProtocolFees]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 pl-8">
       <h1 className="text-2xl font-bold mb-4">Glow Farm Rewards Estimator</h1>
       <FormSection 
         formData={formData}

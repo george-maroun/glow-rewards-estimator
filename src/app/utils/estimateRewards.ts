@@ -68,10 +68,10 @@ function estimateRewards(input: any): any {
     pastProtocolFees
   } = input;
 
-  const powerProductionPerWeek = capacity * avgPeakSunHours * 7;
+  const powerProductionPerWeekKwh = capacity * avgPeakSunHours * 7;
   const avgProtocolFee = 20000;
   const avgCarbonCreditProductionPerWeek = 0.08884375;
-  const carbonCreditProductionPerWeek = carbonCreditsPerMwh * powerProductionPerWeek / 1000;
+  const carbonCreditProductionPerWeek = carbonCreditsPerMwh * powerProductionPerWeekKwh / 1000;
 
   const annualEletricityPriceIncreasePercentage = AnnualEletricityPriceIncreasePerState[state] || 0;
   let electricityPricePerKWhWithIncrease = electricityPricePerKWh;
@@ -121,7 +121,7 @@ function estimateRewards(input: any): any {
     const weeklyTokenReward = WEEKLY_TOKEN_REWARDS * (protocolFee / totalProtocolFeePerWeek);
     weeklyTokenRewards.push(weeklyTokenReward);
 
-    const weeklyElectricityRevenue = powerProductionPerWeek * electricityPricePerKWhWithIncrease;
+    const weeklyElectricityRevenue = powerProductionPerWeekKwh * electricityPricePerKWhWithIncrease;
     weeklyElectricityRevenues.push(weeklyElectricityRevenue);
 
     const totalUSDCRevenue = weeklyUSDCRewards.reduce((a, b) => a + b, 0);
@@ -147,7 +147,11 @@ function estimateRewards(input: any): any {
 
   return {
     weeklyData: weeklyData,
-    protocolFee: protocolFee,
+    farmStats: { 
+      protocolFee,
+      carbonCreditProductionPerWeek,
+      powerProductionPerWeekKwh,
+    }
   };
 }
 

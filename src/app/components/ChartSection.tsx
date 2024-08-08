@@ -17,7 +17,7 @@ export const ChartSection: React.FC<ChartSectionProps> = (
     estimatedSlope
   }) => {
   const chartData = weeklyData;
-  // const currFarmCountData = weeklyFarmCount[weeklyFarmCount.length - 1];
+
   const slopeOfEstimate = estimatedSlope * dilutionRate;
 
   console.log({chartData})
@@ -35,14 +35,14 @@ export const ChartSection: React.FC<ChartSectionProps> = (
         endX={endX}
       />
       <Chart 
-        title="Cumulative Rewards"
+        title="Cumulative Glow Token and USDC Rewards"
         data={chartData}
         chartType="composed"
         dataKeys={['totalTokenRevenue', 'totalUSDCRevenue']}
         colors={['#ffc658', '#82ca9d']}
       />
       <Chart 
-        title="Weekly Rewards"
+        title="Weekly Glow Token and USDC Rewards"
         data={chartData}
         chartType="composed"
         dataKeys={['weeklyUSDCRevenue', 'weeklyTokenRevenue']}
