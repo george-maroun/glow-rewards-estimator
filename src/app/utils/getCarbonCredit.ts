@@ -1,14 +1,10 @@
-// TODO: Remove mock data and implement the actual API call
-// TODO: Implement a caching mechanism to avoid calling the API multiple times
-
 const getCarbonCredit = async (lat:number, lon:number) => {
   console.log('lat:', lat);
   console.log('lon:', lon);
   try {
-    // const response = await fetch(`http://95.217.194.59:35015/api/v1/geo-stats?latitude=${lat}&longitude=${lon}`);
-    const response = await fetch(`https://api.carbonkit.net/`);
+    const response = await fetch(`http://95.217.194.59:35015/api/v1/geo-stats?latitude=${lat}&longitude=${lon}`);
     const data = await response.json();
-    console.log('data:', data);
+    console.log('API works:', data);
     return data;
   } catch (error) {
     console.error('Error fetching carbon credit information:', error);

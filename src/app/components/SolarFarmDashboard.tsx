@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { FormSection } from './FormSection';
 import { ResultsSection } from './ResultsSection';
 import calculateRewards from '../utils/estimateRewards';
 import getCarbonCredit from '../utils/getCarbonCredit';
 import getLocationDataFromZipcode from '../utils/getLocationDataFromZipcode';
 import getWeeksSinceStart from '../utils/getWeeksSinceStart';
+import debounce from 'lodash/debounce';
 
 interface SolarFarmDashboardProps {
   weeklyFarmCount: Array<{ week: string; value: number }>;
@@ -21,6 +22,12 @@ interface FormData {
   electricityPriceKWh: number;
 }
 
+interface CarbonCreditData {
+  avgPeakSunHours: number;
+  carbonCreditsPerMwh: number;
+  state: string;
+}
+
 const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees }) => {
   const [formData, setFormData] = useState<FormData>({
     zipCode: '',
@@ -29,43 +36,63 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     dilutionRate: 1,
     electricityPriceKWh: 0.11,
   });
-  const [showResults, setShowResults] = useState(0);
+  const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<any>(null);
-  const [avgPeakSunHours, setAvgPeakSunHours] = useState(0);
-  const [carbonCreditsPerMwh, setCarbonCreditsPerMwh] = useState(0);
-  const [state, setState] = useState('');
+  const [carbonCreditData, setCarbonCreditData] = useState<CarbonCreditData>({
+    avgPeakSunHours: 0,
+    carbonCreditsPerMwh: 0,
+    state: '',
+  });
 
-  const estimatedSlope = Number(weeklyFarmCount[weeklyFarmCount.length - 1].value) / (Number(weeklyFarmCount[weeklyFarmCount.length - 1].week) - 16);
+  const estimatedSlope = useMemo(() => {
+    const lastWeek = weeklyFarmCount[weeklyFarmCount.length - 1];
+    return Number(lastWeek.value) / (Number(lastWeek.week) - 16);
+  }, [weeklyFarmCount]);
 
-  
-  
-  useEffect(() => {
-    if (showResults) {
-      handleSubmit();
-    }
-  }, [weeklyFarmCount, formData]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!formData.zipCode) return;
-
-      const locData = await getLocationDataFromZipcode(formData.zipCode);
-      console.log('locData:', locData);
-      if (!locData) return;
-
-      try {
-        const { lat, lng, state } = locData;
-        setState(state);
-        const { average_sunlight, average_carbon_certificates } = await getCarbonCredit(lat, lng);
-        setAvgPeakSunHours(average_sunlight);
-        setCarbonCreditsPerMwh(average_carbon_certificates);   
-      } catch (error) {
-        console.error('Error fetching carbon credit information:', error);
+  // Memoize the getCarbonCredit function to cache results
+  const memoizedGetCarbonCredit = useMemo(() => {
+    const cache = new Map<string, CarbonCreditData>();
+    return async (lat: number, lng: number): Promise<CarbonCreditData> => {
+      const key = `${lat},${lng}`;
+      if (cache.has(key)) {
+        return cache.get(key)!;
       }
+      const result = await getCarbonCredit(lat, lng);
+      cache.set(key, {
+        avgPeakSunHours: result.average_sunlight,
+        carbonCreditsPerMwh: result.average_carbon_certificates,
+        state: '',  // This will be set later
+      });
+      return cache.get(key)!;
     };
+  }, []);
+  
+  // Debounced function to fetch location data and carbon credits
+  const fetchData = useCallback(async (zipCode: string) => {
+    if (zipCode.length !== 5) return;
 
-    if (formData.zipCode.toString().length === 5) fetchData();
-  }, [formData.zipCode]);
+    const locData = await getLocationDataFromZipcode(zipCode);
+    if (!locData) return;
+
+    try {
+      const { lat, lng, state } = locData;
+      const carbonData = await memoizedGetCarbonCredit(lat, lng);
+      setCarbonCreditData({ ...carbonData, state });
+    } catch (error) {
+      console.error('Error fetching carbon credit information:', error);
+    }
+  }, [memoizedGetCarbonCredit]);
+
+  const debouncedFetchData = useMemo(
+    () => debounce(fetchData, 500),
+    [fetchData]
+  );
+
+  useEffect(() => {
+    if (formData.zipCode) {
+      debouncedFetchData(formData.zipCode);
+    }
+  }, [formData.zipCode, debouncedFetchData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -76,28 +103,28 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     setFormData(prev => ({ ...prev, dilutionRate: parseFloat(e.target.value) }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const joiningWeek = getWeeksSinceStart(formData.joiningDate);
     const endWeek = joiningWeek + 208;
 
     const input = {
-      state: state,
+      state: carbonCreditData.state,
       electricityPricePerKWh: formData.electricityPriceKWh,
-      carbonCreditsPerMwh: carbonCreditsPerMwh,
+      carbonCreditsPerMwh: carbonCreditData.carbonCreditsPerMwh,
       dilutionRate: Number(formData.dilutionRate),
       joiningWeek,
       endWeek,
-      estimatedSlope: estimatedSlope,
-      avgPeakSunHours: avgPeakSunHours,
+      estimatedSlope,
+      avgPeakSunHours: carbonCreditData.avgPeakSunHours,
       capacity: formData.capacity,
       pastProtocolFees: weeklyProtocolFees,
     };
 
     const calculatedRewards = await calculateRewards(input);
     
-    setShowResults(prev => prev + 1);
     setResults(calculatedRewards);
-  };
+    setShowResults(true);
+  }, [formData, carbonCreditData, estimatedSlope, weeklyProtocolFees]);
 
   return (
     <div className="container mx-auto p-4">
@@ -108,13 +135,14 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         handleSliderChange={handleSliderChange}
         handleSubmit={handleSubmit}
       />
-      {showResults > 0 ?
-      <ResultsSection 
-        weeklyFarmCount={weeklyFarmCount} 
-        formData={formData} 
-        results={results} 
-        estimatedSlope={estimatedSlope}
-      /> : null}
+      {showResults &&
+        <ResultsSection 
+          weeklyFarmCount={weeklyFarmCount} 
+          formData={formData} 
+          results={results} 
+          estimatedSlope={estimatedSlope}
+        />
+      }
     </div>
   );
 };
