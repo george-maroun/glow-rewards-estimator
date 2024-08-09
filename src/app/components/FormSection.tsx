@@ -67,7 +67,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
           </div>
           <div>
             <label htmlFor="dilutionRate" className="block flex items-center">
-              Dilution Multiplier: {formData.dilutionRate}
+              Rate Multiplier: {formData.dilutionRate}
               <TooltipProvider>
                 <Tooltip delayDuration={60}>
                   <TooltipTrigger>
@@ -75,7 +75,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs">
-                      The dilution multiplier is a factor that increases or decreases the rate of new farms joining the Glow protocol.
+                      The rate multiplier is a factor that increases or decreases the rate of new farms joining the Glow protocol.
                       As more farms join, the rewards are shared among more farms, reducing the rewards for each.
                       A multiplier of 1 means the rate of new farms joining over time is the same as the current (historic) rate.
                     </p>
