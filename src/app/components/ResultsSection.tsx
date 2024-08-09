@@ -32,7 +32,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, result
           <tr>
             <td className="border border-gray-300 p-2 text-center">${Math.round(protocolFee)?.toLocaleString()}</td>
             <td className="border border-gray-300 p-2 text-center">{annualPowerProductionMwh?.toLocaleString()} MWh</td>
-            <td className="border border-gray-300 p-2 text-center">{annualCarbonCredit?.toLocaleString()}</td>
+            <td className="border border-gray-300 p-2 text-center">{(annualCarbonCredit * 0.65)?.toLocaleString()}</td>
           </tr>
         </tbody>
       </table>

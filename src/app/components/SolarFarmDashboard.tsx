@@ -12,6 +12,7 @@ import debounce from 'lodash/debounce';
 interface SolarFarmDashboardProps {
   weeklyFarmCount: Array<{ week: string; value: number }>;
   weeklyProtocolFees: any;
+  auditData: any;
 }
 
 interface FormData {
@@ -28,7 +29,7 @@ interface CarbonCreditData {
   state: string;
 }
 
-const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees }) => {
+const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees, auditData }) => {
   const [formData, setFormData] = useState<FormData>({
     zipCode: '',
     capacity: 0,
@@ -44,6 +45,18 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     const lastWeek = weeklyFarmCount[weeklyFarmCount.length - 1];
     return Number(lastWeek.value) / (Number(lastWeek.week) - 16);
   }, [weeklyFarmCount]);
+
+  const avgProtocolFee = useMemo(() => {
+    const totalFees = weeklyProtocolFees.reduce((sum: number, fee: any) => sum + fee.protocolFee, 0);
+    return totalFees / weeklyProtocolFees.length;
+  }, [weeklyProtocolFees]);
+
+  // const avgWeeklyCarbonCredits = auditData.length ? auditData.reduce((acc:number, val:any) => acc + Number(val.summary.carbonFootprintAndProduction.adjustedWeeklyCarbonCredit), 0) / auditData.length : 0.08;
+
+  const avgWeeklyCarbonCredits = useMemo(() => {
+    return auditData?.length ? auditData.reduce((acc:number, val:any) => acc + Number(val.summary.carbonFootprintAndProduction.adjustedWeeklyCarbonCredit), 0) / auditData.length : 0.08;
+  }, [auditData]);
+
 
   // Debounced function to fetch carbon credit data
   const fetchCarbonCreditData = useCallback(
@@ -101,6 +114,8 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
       avgPeakSunHours: carbonCreditData.average_sunlight,
       capacity: formData.capacity,
       pastProtocolFees: weeklyProtocolFees,
+      avgProtocolFee,
+      avgWeeklyCarbonCredits,
     };
 
     const estimatedResults = await estimateRewards(input);

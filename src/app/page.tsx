@@ -1,5 +1,6 @@
 import SolarFarmDashboard from './components/SolarFarmDashboard';
-// import getCarbonCreditsHelper from './utils/getCarbonCreditHelper';
+import { ProtocolFee, RealProtocolFee } from './types';
+export const revalidate = 0;
 
 async function getData() {
   const response = await fetch('https://glowstats.xyz/api/allData');
@@ -10,25 +11,6 @@ async function getData() {
 
   return data.weeklyFarmCount;
 }
-
-// const getWeeklyUSDCRewards = async () => {
-//   const transport = http(process.env.PRIVATE_RPC_URL!)
-//   const viemClient = createPublicClient({
-//     transport: transport,
-//     chain: mainnet, //need mainnet import for the multicll
-//   })
-
-//   const currentWeek = getWeeksSinceStart('');
-//   const lastWeekToFetch = currentWeek + 208
-
-//   const weeklyUSDCRewards = await getWeeklyRewardsForWeeksMulticall({
-//     client: viemClient,
-//     weekStart: currentWeek,
-//     weekEnd: lastWeekToFetch,
-//   })
-
-//   return weeklyUSDCRewards
-// }
 
 const getWeeklyProtocolFees = async () => {
   try {
@@ -42,20 +24,44 @@ const getWeeklyProtocolFees = async () => {
     console.error('Error fetching protocol fees:', error);
     return [];
   }
+};
+
+const getAuditData = async () => {
+  try {
+    const response = await fetch('https://glow.org/api/audits');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching audit data:', error);
+    return [];
+  }
 }
 
-
 export default async function Home() {
-  const weeklyFarmCount = await getData()
-  // const weeklyUSDCRewards = await getWeeklyUSDCRewards()
-  const weeklyProtocolFees = await getWeeklyProtocolFees()
+  const weeklyFarmCount = await getData();
+  const weeklyProtocolFees = await getWeeklyProtocolFees();
+  const auditData = await getAuditData();
+
+  function convertRealFeesToProtocolFees(realFees: RealProtocolFee[]): ProtocolFee[] {
+    return realFees.map(fee => ({
+      week: parseInt(fee.id, 10),
+      protocolFee: parseFloat(fee.totalPayments) / 1_000_000 // Divide by 1M to get the real value
+    })).reverse();
+  }
+
+  const realProtocolFees = convertRealFeesToProtocolFees(weeklyProtocolFees);
+
 
   return (
     <main className="pt-4 pb-20">
       <SolarFarmDashboard 
         weeklyFarmCount={weeklyFarmCount} 
         // weeklyUSDCRewards={weeklyUSDCRewards}
-        weeklyProtocolFees={weeklyProtocolFees}
+        weeklyProtocolFees={realProtocolFees}
+        auditData={auditData}
       />
     </main>
   );

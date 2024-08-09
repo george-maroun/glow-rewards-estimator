@@ -8,10 +8,10 @@ export interface FormData {
   electricityPriceKWh: number;
 }
 
-export interface ProtocolFee {
-  id: string;
-  totalPayments: string;
-}
+// export interface ProtocolFee {
+//   id: string;
+//   totalPayments: string;
+// }
 
 export type InputData = {
   electricityPricePerKWh: number;
@@ -36,4 +36,14 @@ export type ResultData = {
     weeklyTokenRevenue: number;
   }[];
   // Add other result fields as needed
+}
+
+export interface ProtocolFee {
+  week: number;
+  protocolFee: number;
+}
+
+export interface RealProtocolFee {
+  id: string;
+  totalPayments: string;
 }

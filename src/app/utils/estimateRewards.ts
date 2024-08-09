@@ -1,4 +1,4 @@
-import { InputData, ResultData } from '../types';
+import { InputData, ResultData, ProtocolFee } from '../types';
 import calculateProtocolFee from './calculateProtocolFee';
 import { AnnualEletricityPriceIncreasePerState } from '../constants'
 
@@ -6,16 +6,6 @@ import { AnnualEletricityPriceIncreasePerState } from '../constants'
 const BONDING_CURVE_AMOUNT = 4253757.18;
 const TOTAL_WEEKS = 208;
 const WEEKLY_TOKEN_REWARDS = 175000;
-
-interface RealProtocolFee {
-  id: string;
-  totalPayments: string;
-}
-
-interface ProtocolFee {
-  week: number;
-  protocolFee: number;
-}
 
 function calculateUSDCReward(currentWeek: number, protocolFees: ProtocolFee[]): number {
   const startWeek = Math.max(0, currentWeek - 16 - TOTAL_WEEKS);
@@ -29,12 +19,6 @@ function calculateUSDCReward(currentWeek: number, protocolFees: ProtocolFee[]): 
   return totalRewardPool / TOTAL_WEEKS;
 }
 
-function convertRealFeesToProtocolFees(realFees: RealProtocolFee[]): ProtocolFee[] {
-  return realFees.map(fee => ({
-    week: parseInt(fee.id, 10),
-    protocolFee: parseFloat(fee.totalPayments) / 1_000_000 // Divide by 1M to get the real value
-  })).reverse();
-}
 
 function extendProtocolFees(
   realFees: ProtocolFee[],
@@ -65,12 +49,16 @@ function estimateRewards(input: any): any {
     avgPeakSunHours,
     carbonCreditsPerMwh,
     capacity,
-    pastProtocolFees
+    pastProtocolFees,
+    avgProtocolFee,
+    avgWeeklyCarbonCredits,
   } = input;
 
+  console.log({avgWeeklyCarbonCredits});
+  console.log({avgProtocolFee});
+
   const powerProductionPerWeekKwh = capacity * avgPeakSunHours * 7;
-  const avgProtocolFee = 20000;
-  const avgCarbonCreditProductionPerWeek = 0.08884375;
+  const avgCarbonCreditProductionPerWeek = avgWeeklyCarbonCredits;
   const carbonCreditProductionPerWeek = carbonCreditsPerMwh * powerProductionPerWeekKwh / 1000;
 
   const annualEletricityPriceIncreasePercentage = AnnualEletricityPriceIncreasePerState[state] || 0;
@@ -85,8 +73,7 @@ function estimateRewards(input: any): any {
   const weeklyProtocolFee = protocolFee / 192;
 
   // Convert and extend the protocol fees array
-  const convertedRealFees = convertRealFeesToProtocolFees(pastProtocolFees);
-  const extendedProtocolFees = extendProtocolFees(convertedRealFees, endWeek, estimatedSlope, avgProtocolFee);
+  const extendedProtocolFees = extendProtocolFees(pastProtocolFees, endWeek, estimatedSlope, avgProtocolFee);
   // Initialize arrays to store weekly data
   const weeks: number[] = [];
   const numFarms: number[] = [];
@@ -105,7 +92,7 @@ function estimateRewards(input: any): any {
     }
 
     weeks.push(week);
-    const currentNumFarms = Math.round(dilutionRate * estimatedSlope * week - 16);
+    const currentNumFarms = Math.round(dilutionRate * estimatedSlope * week - 16) - Math.max(0, Math.round(dilutionRate * estimatedSlope * (week - 208) - 16));
     numFarms.push(currentNumFarms);
     
     const totalProtocolFee = currentNumFarms * weeklyProtocolFee;
