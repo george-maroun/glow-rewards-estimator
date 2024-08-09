@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@elysiajs/eden": "1.1.1",
@@ -17,9 +18,11 @@
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tanstack/react-query": "^5.51.21",
+    "@vercel/kv": "^1.0.1",
     "@vercel/postgres": "^0.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.424.0",
     "next": "14.2.5",
@@ -30,15 +33,23 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/preset-typescript": "^7.24.7",
+    "@jest/globals": "^29.7.0",
+    "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.7",
-    "@types/node": "^20",
+    "@types/node": "^20.14.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "jest": "^29.7.0",
     "postcss": "^8",
     "prisma": "^5.18.0",
     "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.2.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
