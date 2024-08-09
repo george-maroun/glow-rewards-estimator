@@ -13,7 +13,7 @@ interface FormSectionProps {
 export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputChange, handleSliderChange, handleSubmit }) => {
 
   return (
-    <form action={handleSubmit} className="mb-8">
+    <form action={handleSubmit} className="mb-8 mt-4">
       <h2 className="text-xl font-semibold mb-2">Enter farm information</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

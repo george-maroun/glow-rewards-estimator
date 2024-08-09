@@ -32,9 +32,9 @@ export const getCarbonCredit = async (zipcode: string) => {
       where: { zipcode },
     });
 
-    // const sixMonthsAgo = getDateSixMonthsAgo();
+    const sixMonthsAgo = getDateSixMonthsAgo();
 
-    if (locationData) { // && locationData.lastUpdated > sixMonthsAgo) {
+    if (locationData && locationData.lastUpdated > sixMonthsAgo) {
       console.log(`Using database data for zipcode ${zipcode}`);
       return {
         average_sunlight: locationData.peakSunHours,
@@ -50,7 +50,9 @@ export const getCarbonCredit = async (zipcode: string) => {
     }
 
     const { lat, lng, state } = geoData;
-    const response = await fetch(`${GEO_STATS_API}?latitude=${lat}&longitude=${lng}`);
+    const response = await fetch(`${GEO_STATS_API}?latitude${lat}&longitude=${lng}`);
+
+    
     
     if (!response.ok) {
       throw new Error('API request failed');

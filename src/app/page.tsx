@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import SolarFarmDashboard from './components/SolarFarmDashboard';
 import { ProtocolFee, RealProtocolFee } from './types';
 export const revalidate = 0;
@@ -56,13 +57,16 @@ export default async function Home() {
 
 
   return (
-    <main className="pt-4 pb-20">
+    <main className="pt-6 pr-8 flex justify-start items-start">
       <SolarFarmDashboard 
         weeklyFarmCount={weeklyFarmCount} 
         // weeklyUSDCRewards={weeklyUSDCRewards}
         weeklyProtocolFees={realProtocolFees}
         auditData={auditData}
       />
+      <div className=''>
+        <Link href={'/about'} className='font-semibold underline text-slate-500'>About</Link>
+      </div>
     </main>
   );
 }

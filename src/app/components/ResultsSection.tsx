@@ -18,7 +18,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, result
   const annualPowerProductionMwh = powerProductionPerWeekKwh * 52 / 1000;
 
   return (
-    <div className="results">
+    <div className="mt-4">
       <h2 className="text-xl font-semibold mb-4">Estimated Farm Stats</h2>
       <table className="w-full border-collapse border border-gray-300 max-w-[700px]">
         <thead>

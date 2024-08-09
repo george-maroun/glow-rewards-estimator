@@ -131,7 +131,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   }, [formData, carbonCreditData, estimatedSlope, weeklyProtocolFees]);
 
   return (
-    <div className="container mx-auto p-4 pl-8">
+    <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Glow Farm Rewards Estimator</h1>
       <p className="text-sm text-gray-600 mb-6 max-w-[800px]"><b>Disclaimer:</b> This website is community-build and is not affiliated with <a href='https://www.glow.org' className='underline' target='_blank'>Glow</a>. The information provided should not be considered as professional advice, and its accuracy depends on various factors and assumptions.</p>
       <FormSection 
