@@ -1,9 +1,5 @@
 import SolarFarmDashboard from './components/SolarFarmDashboard';
 // import getCarbonCreditsHelper from './utils/getCarbonCreditHelper';
-import { getWeeklyRewardsForWeeksMulticall } from './multicalls/getWeeklyUSDCRewards';
-import { createPublicClient, http, isAddress } from 'viem'
-import { mainnet } from 'wagmi/chains'
-import getWeeksSinceStart from './utils/getWeeksSinceStart';
 
 async function getData() {
   const response = await fetch('https://glowstats.xyz/api/allData');
