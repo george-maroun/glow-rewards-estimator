@@ -54,9 +54,6 @@ function estimateRewards(input: any): any {
     avgWeeklyCarbonCredits,
   } = input;
 
-  console.log({avgWeeklyCarbonCredits});
-  console.log({avgProtocolFee});
-
   const powerProductionPerWeekKwh = capacity * avgPeakSunHours * 7;
   const avgCarbonCreditProductionPerWeek = avgWeeklyCarbonCredits;
   const carbonCreditProductionPerWeek = carbonCreditsPerMwh * powerProductionPerWeekKwh / 1000;

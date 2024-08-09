@@ -32,9 +32,9 @@ export const getCarbonCredit = async (zipcode: string) => {
       where: { zipcode },
     });
 
-    const sixMonthsAgo = getDateSixMonthsAgo();
+    // const sixMonthsAgo = getDateSixMonthsAgo();
 
-    if (locationData && locationData.lastUpdated > sixMonthsAgo) {
+    if (locationData) { // && locationData.lastUpdated > sixMonthsAgo) {
       console.log(`Using database data for zipcode ${zipcode}`);
       return {
         average_sunlight: locationData.peakSunHours,

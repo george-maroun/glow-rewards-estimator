@@ -1,4 +1,6 @@
 import React from 'react';
+import { InfoIcon } from 'lucide-react';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../../components/ui/tooltip';
 
 type RewardsAtYearY = {
   estimatedTokenRevenue: number;
@@ -85,7 +87,21 @@ export const RewardsDisplay: React.FC<any> = ({
             <th className="border border-gray-300 p-2">Year</th>
             <th className="border border-gray-300 p-2">Glow Tokens</th>
             <th className="border border-gray-300 p-2">USDC</th>
-            <th className="border border-gray-300 p-2">Electricity Value</th>
+            <th className="border border-gray-300 p-2">
+              Electricity Value
+              <TooltipProvider>
+                <Tooltip delayDuration={60}>
+                  <TooltipTrigger>
+                    <InfoIcon className="ml-2 h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      The nominal dollar value of the electricity produced by the farm, calculated using the estimated energy production, the price of electricity, and the yearly energy price increase at the location.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </th>
           </tr>
         </thead>
         <tbody>

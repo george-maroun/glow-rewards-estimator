@@ -32,10 +32,14 @@ const Chart: React.FC<{
   const ChartComponent = chartType === 'line' ? LineChart : chartType === 'bar' ? BarChart : ComposedChart;
 
   return (
-    <div>
+    <div className='mb-7'>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <ChartComponent width={500} height={300} data={data}>
-        <Legend />
+      <ChartComponent 
+        width={500} 
+        height={300} 
+        data={data}
+        margin={{ top: 10, right: 0, left: 0, bottom: 20 }}
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="week" 
@@ -44,6 +48,11 @@ const Chart: React.FC<{
         />
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
+        <Legend 
+          verticalAlign="top" 
+          height={36}
+          // wrapperStyle={{ bottom: 0 }}
+        />
         
         {dataKeys.map((key, index) => 
           chartType === 'composed' && key.includes('weekly') ? (

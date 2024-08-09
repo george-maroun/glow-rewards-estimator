@@ -34,9 +34,9 @@ const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEst
   const endY = Math.round(slopeOfEstimate * endX);
 
   return (
-    <div>
+    <div className='mb-4'>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <LineChart width={500} height={300} data={data}>
+      <LineChart width={500} height={300} data={data} margin={{ top: 10, right: 0, left: 0, bottom: 20 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="week" 
@@ -47,7 +47,11 @@ const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEst
         />
         <YAxis domain={[0, endY]} />
         <Tooltip content={<CustomTooltip />} />
-        <Legend margin={{top:20}}/>
+        <Legend 
+          verticalAlign="top" 
+          height={36}
+          // wrapperStyle={{ bottom: 0 }}
+        />
         <Line 
           type="monotone" 
           dataKey="value" 

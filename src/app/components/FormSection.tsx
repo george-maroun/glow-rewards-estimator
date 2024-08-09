@@ -76,7 +76,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
                   <TooltipContent>
                     <p className="max-w-xs">
                       The rate multiplier is a factor that increases or decreases the rate of new farms joining the Glow protocol.
-                      As more farms join, the rewards are shared among more farms, reducing the rewards for each.
+                      The rate at which new farms join the protocol affects the rewards received.
                       A multiplier of 1 means the rate of new farms joining over time is the same as the current (historic) rate.
                     </p>
                   </TooltipContent>

@@ -20,13 +20,11 @@ export const ChartSection: React.FC<ChartSectionProps> = (
 
   const slopeOfEstimate = estimatedSlope * dilutionRate;
 
-  console.log({chartData})
-
   const startX = chartData[0].week;
   const endX = chartData[chartData.length - 1].week;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 mt-10">
       <FarmCountChart 
         title="Weekly Farm Count" 
         data={weeklyFarmCount} 

@@ -101,6 +101,12 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     }
 
     const joiningWeek = getWeeksSinceStart(formData.joiningDate);
+    if (joiningWeek < 0) {
+      console.error('Invalid joining date');
+      // alert user that joining date is invalid
+      alert('Joining date must be after 11/20/2023');
+      return;
+    }
     const endWeek = joiningWeek + 208;
 
     const input = {
