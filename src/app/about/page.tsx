@@ -23,7 +23,7 @@ const About = () => {
           </CardHeader>
           <CardContent>
             <ol className="list-decimal pl-6">
-              <li>Enter the zip code, electricity price per kilowatt-hour at the farm&apos;s location, DC output in kilowatts, and the date of joining the protocol.</li>
+              <li>Enter the zip code, electricity price per kilowatt-hour at the farm's location, DC output in kilowatts, and the date of joining the protocol.</li>
               <li>Adjust the rate multiplier to increase or decrease the slope of the weekly farm count estimate curve.</li>
               <li>Click on "Estimate Rewards" to view the estimated stats for the farm: protocol fee, annual electricity production, annual carbon credit production, and rewards over four years.</li>
               <li>Adjust any input value and click on "Estimate Rewards" again to see how the rewards change.</li>
