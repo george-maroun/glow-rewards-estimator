@@ -10,10 +10,10 @@ const About = () => {
         
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Glow Rewards Estimator</CardTitle>
+            <CardTitle>Description</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>This website estimates the statistics and rewards in Glow tokens and USDC over four years for a hypothetical farm joining the Glow protocol at a given date.</p>
+            <p>Glow Rewards Estimator estimates the statistics and rewards in Glow tokens and USDC over four years for a hypothetical farm joining the Glow protocol at a given date.</p>
           </CardContent>
         </Card>
 

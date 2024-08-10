@@ -8,9 +8,10 @@ interface FormSectionProps {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleSliderChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (results: any) => void;
+  disableSubmitButton: boolean;
 }
 
-export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputChange, handleSliderChange, handleSubmit }) => {
+export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputChange, handleSliderChange, handleSubmit, disableSubmitButton }) => {
 
   return (
     <form action={handleSubmit} className="mb-8 mt-4">
@@ -40,6 +41,7 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
               className="w-full border rounded px-2 py-1"
               required
             />
+            
           </div>
           <div>
             <label htmlFor="capacity" className="block">DC Output (kW)</label>
@@ -106,7 +108,11 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
           </div>
         </div>
       </div>
-      <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+      <button 
+        type="submit" 
+        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        disabled={disableSubmitButton}
+      >
         Estimate Rewards
       </button>
     </form>

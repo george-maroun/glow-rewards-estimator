@@ -40,6 +40,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [carbonCreditData, setCarbonCreditData] = useState<CarbonCreditData | null>(null);
+  const [isRateLimited, setIsRateLimited] = useState(false);
 
   const estimatedSlope = useMemo(() => {
     const lastWeek = weeklyFarmCount[weeklyFarmCount.length - 1];
@@ -58,7 +59,6 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   }, [auditData]);
 
 
-  // Debounced function to fetch carbon credit data
   const fetchCarbonCreditData = useCallback(
     debounce(async (zipCode: string) => {
       if (zipCode.length !== 5) return;
@@ -67,11 +67,15 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         const data = await getCarbonCredit(zipCode);
         if (data) {
           setCarbonCreditData(data);
+          setIsRateLimited(false);
         } else {
           console.error('No data returned from getCarbonCredit');
         }
       } catch (error) {
         console.error('Error fetching carbon credit information:', error);
+        if (error instanceof Error && error.message.includes('Rate limit exceeded')) {
+          setIsRateLimited(true);
+        }
       }
     }, 500),
     []
@@ -93,6 +97,10 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   };
 
   const handleSubmit = useCallback(async () => {
+    if (isRateLimited) {
+      return;
+    }
+
     if (!carbonCreditData) {
       console.error('Carbon credit data not available');
       // alert user that carbon credit data is not available
@@ -128,17 +136,23 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     
     setResults(estimatedResults);
     setShowResults(true);
-  }, [formData, carbonCreditData, estimatedSlope, weeklyProtocolFees]);
+  }, [formData, carbonCreditData, estimatedSlope, weeklyProtocolFees, isRateLimited]);
 
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Glow Farm Rewards Estimator</h1>
       <p className="text-sm text-gray-600 mb-6 max-w-[800px]"><b>Disclaimer:</b> This website is community-build and is not affiliated with <a href='https://www.glow.org' className='underline' target='_blank'>Glow</a>. The information provided should not be considered as professional advice, and its accuracy depends on various factors and assumptions.</p>
+      {isRateLimited && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+          <p>We are receiving too many requests at the moment. Please come back later.</p>
+        </div>
+      )}
       <FormSection 
         formData={formData}
         handleInputChange={handleInputChange}
         handleSliderChange={handleSliderChange}
         handleSubmit={handleSubmit}
+        disableSubmitButton={isRateLimited}
       />
       {showResults && carbonCreditData &&
         <ResultsSection 
