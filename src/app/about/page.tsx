@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 const About = () => {
   return (
     <div className="container mx-auto pl-8 pr-8 py-6 flex flex-row justify-between items-start">
-      <div className=''>
+      <div className="">
         <h1 className="text-2xl font-bold mb-6">About</h1>
         
         <Card className="mb-6">
@@ -23,10 +23,10 @@ const About = () => {
           </CardHeader>
           <CardContent>
             <ol className="list-decimal pl-6">
-              <li>Enter the zip code, electricity price per kilowatt-hour at the farm's location, DC output in kilowatts, and the date of joining the protocol.</li>
+              <li>Enter the zip code, electricity price per kilowatt-hour at the farm&apos;s location, DC output in kilowatts, and the date of joining the protocol.</li>
               <li>Adjust the rate multiplier to increase or decrease the slope of the weekly farm count estimate curve.</li>
-              <li>Click on "Estimate Rewards" to view the estimated stats for the farm: protocol fee, annual electricity production, annual carbon credit production, and rewards over four years.</li>
-              <li>Adjust any input value and click on "Estimate Rewards" again to see how the rewards change.</li>
+              <li>Click on &quot;Estimate Rewards&quot; to view the estimated stats for the farm: protocol fee, annual electricity production, annual carbon credit production, and rewards over four years.</li>
+              <li>Adjust any input value and click on &quot;Estimate Rewards&quot; again to see how the rewards change.</li>
             </ol>
           </CardContent>
         </Card>
@@ -49,7 +49,7 @@ const About = () => {
 
             <h3 className="font-semibold mt-4 mb-2">Weekly Glow Token Rewards:</h3>
             <p>weekly_glow_reward = total_weekly_glow_rewards * (protocol_fee / total_protocol_fee_per_week)</p>
-            <p className='mt-2'>Where:</p>
+            <p className="mt-2">Where:</p>
             <ul className="list-disc ml-6">
               <li>total_weekly_glow_rewards is a constant = 175,000</li>
               <li>protocol_fee is the protocol fee of the hypothetical solar farm</li>
@@ -61,11 +61,11 @@ const About = () => {
             <ol className="list-decimal ml-6 mt-2">
               <li>The bonding curve amount</li>
               <li>Protocol fees collected over the past 208 weeks (excluding the most recent 16 weeks)</li>
-              <li>The farm's carbon credit production relative to the total carbon credit production</li>
+              <li>The farm&apos;s carbon credit production relative to the total carbon credit production</li>
             </ol>
             <p className="mt-2">The exact calculation is:</p>
             <p className="my-2">weekly_usdc_rewards = usdc_pool_for_week * (carbon_credit_production / total_carbon_credits)</p>
-            <p className='mt-2'>Where:</p>
+            <p className="mt-2">Where:</p>
             <ul className="list-disc ml-6">
               <li>usdc_pool_for_week is the average of the weekly protocol fees paid over the past 208 weeks (excluding the most recent 16 weeks)</li>
               <li>carbon_credit_production is the estimated number of carbon credit produced that week by the hypothetical farm</li>
@@ -74,17 +74,17 @@ const About = () => {
 
             <h3 className="font-semibold mt-4 mb-2">Weekly Electricity Value:</h3>
             <p>weekly_electricity_value = power_production_per_week_kwh * electricity_price_per_kwh * (1 + annual_percent_increase_in_electricity_price) ^ years_since_join_date</p>
-            <p className='mt-2'>Where:</p>
+            <p className="mt-2">Where:</p>
             <ul className="list-disc ml-6">
               <li>power_production_per_week_kwh is the average weekly power production in kilowatt-hours</li>
-              <li>annual_percent_increase_in_electricity_price is the electricity price per kWh, which increases annually based on the state's electricity price increase rate</li>
+              <li>annual_percent_increase_in_electricity_price is the electricity price per kWh, which increases annually based on the state&apos;s electricity price increase rate</li>
             </ul>
             <p className="mt-2">This calculation estimates the monetary value of the electricity produced by the solar installation each week.</p>
           </CardContent>
         </Card>
       </div>
-      <div className=''>
-        <Link href={'/'} className='font-semibold underline text-slate-600'>Home</Link>
+      <div className="">
+        <Link href={'/'} className="font-semibold underline text-slate-600">Home</Link>
       </div>
     </div>
   );
