@@ -84,7 +84,9 @@ const About = () => {
         </Card>
       </div>
       <div className="">
-        <Link href={'/'} className="font-semibold underline text-slate-600">Home</Link>
+        <Link href={'/'} className="font-semibold text-slate-600">
+          <span className="underline">Home</span> 🏠
+        </Link>
       </div>
     </div>
   );
