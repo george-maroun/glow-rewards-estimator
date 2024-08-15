@@ -65,7 +65,10 @@ export default async function Home() {
         auditData={auditData}
       />
       <div className=''>
-        <Link href={'/about'} className='font-semibold underline text-slate-500'>About</Link>
+        <Link href={'/about'} className='font-semibold text-slate-500 flex gap-1'>    
+          <span className='underline'>About</span>
+          <span className='text-slate-500'>📚</span>
+        </Link>
       </div>
     </main>
   );
