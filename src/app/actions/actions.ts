@@ -3,6 +3,7 @@
 import getLocationDataFromZipcode from '../utils/getLocationDataFromZipcode';
 import prisma from '../../../lib/prisma';
 import { kv } from '@vercel/kv';
+export const revalidate = 0;
 
 const GEO_STATS_API = process.env.GEO_STATS_API || '';
 const RATE_LIMIT = 25;
