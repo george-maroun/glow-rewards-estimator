@@ -6,7 +6,10 @@ const About = () => {
   return (
     <div className="container mx-auto pl-8 pr-8 py-6 flex flex-row justify-between items-start">
       <div className="">
-        <h1 className="text-2xl font-bold mb-6">About</h1>
+        <Link href={'/'} className="font-semibold text-slate-600 mb-8">
+          <span className="">← Back</span>
+        </Link>
+        <h1 className="text-2xl font-bold mb-6 mt-8">About</h1>
         
         <Card className="mb-6">
           <CardHeader>
@@ -84,9 +87,7 @@ const About = () => {
         </Card>
       </div>
       <div className="">
-        <Link href={'/'} className="font-semibold text-slate-600">
-          <span className="underline">Home</span> 🏠
-        </Link>
+        
       </div>
     </div>
   );
