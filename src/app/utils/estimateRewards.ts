@@ -40,6 +40,7 @@ function extendProtocolFees(
 
 function estimateRewards(input: any): any {
   const {
+    city,
     state,
     endWeek,
     joiningWeek,
@@ -135,6 +136,10 @@ function estimateRewards(input: any): any {
       protocolFee,
       carbonCreditProductionPerWeek,
       powerProductionPerWeekKwh,
+    },
+    farmLocation: {
+      city,
+      state,
     }
   };
 }

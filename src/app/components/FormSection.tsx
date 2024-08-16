@@ -110,7 +110,8 @@ export const FormSection: React.FC<FormSectionProps> = ({ formData, handleInputC
       </div>
       <button 
         type="submit" 
-        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded
+                  disabled:opacity-60 disabled:cursor-not-allowed disabled:opacity-50"
         disabled={disableSubmitButton}
       >
         Estimate Rewards

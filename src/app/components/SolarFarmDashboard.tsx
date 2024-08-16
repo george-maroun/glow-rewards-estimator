@@ -120,6 +120,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     const endWeek = joiningWeek + 208;
 
     const input = {
+      city: carbonCreditData.city,
       state: carbonCreditData.state,
       electricityPricePerKWh: formData.electricityPriceKWh,
       carbonCreditsPerMwh: carbonCreditData.average_carbon_certificates,
@@ -159,11 +160,10 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         handleInputChange={handleInputChange}
         handleSliderChange={handleSliderChange}
         handleSubmit={handleSubmit}
-        disableSubmitButton={isRateLimited}
+        disableSubmitButton={isRateLimited || !carbonCreditData}
       />
       {showResults && carbonCreditData &&
         <ResultsSection 
-          locationData={{ city: carbonCreditData.city, state: carbonCreditData.state }}
           weeklyFarmCount={weeklyFarmCount} 
           formData={formData} 
           results={results} 

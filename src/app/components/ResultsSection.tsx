@@ -8,10 +8,9 @@ interface ResultsSectionProps {
   results: any;
   weeklyFarmCount: {week: string, value: number}[];
   estimatedSlope: number;
-  locationData: any;
 }
 
-export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, results, weeklyFarmCount, estimatedSlope, locationData }) => {
+export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, results, weeklyFarmCount, estimatedSlope }) => {
   const { farmStats, weeklyData } = results;
   const { protocolFee, carbonCreditProductionPerWeek, powerProductionPerWeekKwh } = farmStats;
 
@@ -20,7 +19,7 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ formData, result
 
   return (
     <div className="mt-4">
-      <h1 className="text-xl font-semibold mb-8">{locationData ? `${locationData.city}, ${locationData.state}` : ''}</h1>
+      <h1 className="text-xl font-semibold mb-8">{results ? `${results.farmLocation.city}, ${results.farmLocation.state}` : ''}</h1>
       <h2 className="text-xl font-semibold mb-4">Estimated Farm Stats</h2>
       <table className="w-full border-collapse border border-gray-300 max-w-[700px]">
         <thead>
