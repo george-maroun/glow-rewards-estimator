@@ -43,6 +43,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   const [results, setResults] = useState<any>(null);
   const [carbonCreditData, setCarbonCreditData] = useState<CarbonCreditData | null>(null);
   const [isRateLimited, setIsRateLimited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const estimatedSlope = useMemo(() => {
     const lastWeek = weeklyFarmCount[weeklyFarmCount.length - 1];
@@ -65,6 +66,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
     debounce(async (zipCode: string) => {
       if (zipCode.length !== 5) return;
 
+      setIsLoading(true);
       try {
         const data = await getCarbonCredit(zipCode);
         if (data) {
@@ -78,6 +80,8 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         if (error instanceof Error && error.message.includes('Rate limit exceeded')) {
           setIsRateLimited(true);
         }
+      } finally {
+        setIsLoading(false);
       }
     }, 500),
     []
@@ -160,8 +164,17 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
         handleInputChange={handleInputChange}
         handleSliderChange={handleSliderChange}
         handleSubmit={handleSubmit}
-        disableSubmitButton={isRateLimited || !carbonCreditData}
+        disableSubmitButton={isRateLimited || !carbonCreditData || !formData.joiningDate}
       />
+      {isLoading && (
+        <div className='flex'>
+          <svg className="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span className="ml-2">Loading carbon credit data...</span>
+        </div>
+      )}
       {showResults && carbonCreditData &&
         <ResultsSection 
           weeklyFarmCount={weeklyFarmCount} 
