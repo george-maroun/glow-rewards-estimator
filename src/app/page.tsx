@@ -58,12 +58,6 @@ export default async function Home() {
 
   return (
     <main className="pt-6 pr-8 ">
-      <div className='pl-8 mb-8'>
-      <Link href={'/about'} className='font-semibold text-slate-500 flex gap-1'>    
-          <span className='underline'>About</span>
-          <span className='text-slate-500'>📚</span>
-        </Link>
-        </div>
       <SolarFarmDashboard 
         weeklyFarmCount={weeklyFarmCount} 
         // weeklyUSDCRewards={weeklyUSDCRewards}

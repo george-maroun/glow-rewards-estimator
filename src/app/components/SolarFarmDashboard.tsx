@@ -8,6 +8,7 @@ import { getCarbonCredit } from '../actions/actions';
 // import getLocationDataFromZipcode from '../utils/getLocationDataFromZipcode';
 import getWeeksSinceStart from '../utils/getWeeksSinceStart';
 import debounce from 'lodash/debounce';
+import Link from 'next/link';
 
 interface SolarFarmDashboardProps {
   weeklyFarmCount: Array<{ week: string; value: number }>;
@@ -140,6 +141,11 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
 
   return (
     <div className="container mx-auto">
+      <Link href={'/about'} className='font-semibold text-slate-500 flex gap-1 mb-8'>    
+          <span className='underline'>About</span>
+          <span className='text-slate-500'>📚</span>
+        </Link>
+      
       <h1 className="text-2xl font-bold mb-4">Glow Farm Rewards Estimator</h1>
       <p className="text-sm text-gray-600 mb-6 max-w-[800px]"><b>Disclaimer:</b> This website is community-build and is not affiliated with <a href='https://www.glow.org' className='underline' target='_blank'>Glow</a>. The information provided should not be considered as professional advice, and its accuracy depends on various factors and assumptions.</p>
       {isRateLimited && (
