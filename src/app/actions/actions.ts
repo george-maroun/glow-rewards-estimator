@@ -55,12 +55,13 @@ export const getCarbonCredit = async (zipcode: string) => {
 
     const sixMonthsAgo = getDateSixMonthsAgo();
 
-    if (locationData && locationData.lastUpdated > sixMonthsAgo) {
+    if (locationData && locationData.city && locationData.lastUpdated > sixMonthsAgo) {
       console.log(`Using database data for zipcode ${zipcode}`);
       return {
         average_sunlight: locationData.peakSunHours,
         average_carbon_certificates: locationData.carbonCreditsPerMwh,
-        state: locationData.state
+        state: locationData.state,
+        city: locationData.city
       };
     }
 
@@ -70,8 +71,7 @@ export const getCarbonCredit = async (zipcode: string) => {
       throw new Error('Failed to get location data from zipcode');
     }
 
-    const { lat, lng, state } = geoData;
-    
+    const { lat, lng, state, city } = geoData;
     
     const rateKey = `ratelimit:geostats:${process.env.VERCEL_ENV || 'development'}`;
     const allowed = await checkRateLimit(rateKey);
@@ -86,15 +86,12 @@ export const getCarbonCredit = async (zipcode: string) => {
     }
 
     const data = await response.json();
-    // const data = {
-    //   average_sunlight: 5.7153538630137275,
-    //   average_carbon_certificates: 0.544651860894881
-    // };
 
     // Update or create the database entry
     await prisma.locationData.upsert({
       where: { zipcode },
       update: {
+        city,
         state,
         carbonCreditsPerMwh: data.average_carbon_certificates,
         peakSunHours: data.average_sunlight,
@@ -104,6 +101,7 @@ export const getCarbonCredit = async (zipcode: string) => {
       },
       create: {
         zipcode,
+        city,
         state,
         carbonCreditsPerMwh: data.average_carbon_certificates,
         peakSunHours: data.average_sunlight,
@@ -115,7 +113,8 @@ export const getCarbonCredit = async (zipcode: string) => {
     return {
       average_sunlight: data.average_sunlight,
       average_carbon_certificates: data.average_carbon_certificates,
-      state
+      state,
+      city
     };
 
   } catch (error) {
@@ -123,4 +122,3 @@ export const getCarbonCredit = async (zipcode: string) => {
     throw error;
   }
 }
-

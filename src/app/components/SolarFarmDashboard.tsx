@@ -28,6 +28,7 @@ interface CarbonCreditData {
   average_sunlight: number;
   average_carbon_certificates: number;
   state: string;
+  city?: string;
 }
 
 const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees, auditData }) => {
@@ -162,6 +163,7 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
       />
       {showResults && carbonCreditData &&
         <ResultsSection 
+          locationData={{ city: carbonCreditData.city, state: carbonCreditData.state }}
           weeklyFarmCount={weeklyFarmCount} 
           formData={formData} 
           results={results} 

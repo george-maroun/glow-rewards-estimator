@@ -11,6 +11,7 @@ datasource db {
 model LocationData {
   id                    Int      @id @default(autoincrement())
   zipcode               String   @unique
+  city                  String
   state                 String
   carbonCreditsPerMwh   Float
   peakSunHours          Float
