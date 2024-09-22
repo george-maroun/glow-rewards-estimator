@@ -44,7 +44,7 @@ const getAuditData = async () => {
 export default async function Home() {
   const weeklyFarmCount = await getData();
   const weeklyProtocolFees = await getWeeklyProtocolFees();
-  const auditData = await getAuditData();
+  // const auditData = await getAuditData();
 
   function convertRealFeesToProtocolFees(realFees: RealProtocolFee[]): ProtocolFee[] {
     return realFees.map(fee => ({
@@ -62,7 +62,7 @@ export default async function Home() {
         weeklyFarmCount={weeklyFarmCount} 
         // weeklyUSDCRewards={weeklyUSDCRewards}
         weeklyProtocolFees={realProtocolFees}
-        auditData={auditData}
+        // auditData={auditData}
       />
       <div className=''>
         
