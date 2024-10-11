@@ -13,7 +13,7 @@ import Link from 'next/link';
 interface SolarFarmDashboardProps {
   weeklyFarmCount: Array<{ week: string; value: number }>;
   weeklyProtocolFees: any;
-  // auditData: any;
+  auditData: any;
 }
 
 interface FormData {
@@ -31,7 +31,7 @@ interface CarbonCreditData {
   city?: string;
 }
 
-const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees }) => {
+const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount, weeklyProtocolFees, auditData }) => {
   const [formData, setFormData] = useState<FormData>({
     zipCode: '',
     capacity: 0,
@@ -57,11 +57,11 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
 
   // const avgWeeklyCarbonCredits = auditData.length ? auditData.reduce((acc:number, val:any) => acc + Number(val.summary.carbonFootprintAndProduction.adjustedWeeklyCarbonCredit), 0) / auditData.length : 0.08;
 
-  // const avgWeeklyCarbonCredits = useMemo(() => {
-  //   return auditData?.length ? auditData.reduce((acc:number, val:any) => acc + Number(val.summary.carbonFootprintAndProduction.adjustedWeeklyCarbonCredit), 0) / auditData.length : 0.08;
-  // }, [auditData]);
+  const avgWeeklyCarbonCredits = useMemo(() => {
+    return auditData?.length ? auditData.reduce((acc:number, val:any) => acc + Number(val.summary.carbonFootprintAndProduction.adjustedWeeklyCarbonCredit), 0) / auditData.length : 0.08;
+  }, [auditData]);
 
-  const avgWeeklyCarbonCredits = 0.08;
+  // const avgWeeklyCarbonCredits = 0.08;
 
   const fetchCarbonCreditData = useCallback(
     debounce(async (zipCode: string) => {
