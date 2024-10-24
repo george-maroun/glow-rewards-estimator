@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts';
 import getDateFromWeek from '@/app/utils/getDateFromWeek';
 
@@ -30,13 +30,37 @@ interface FarmCountChartProps {
 }
 
 const FarmCountChart: React.FC<FarmCountChartProps> = ({ title, data, slopeOfEstimate, endX }) => {
+  const [chartDimensions, setChartDimensions] = useState({ width: 500, height: 300 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 550) {
+        setChartDimensions({ width: 300, height: 230 });
+      } else {
+        setChartDimensions({ width: 500, height: 300 });
+      }
+    };
+
+    handleResize(); // Set initial dimensions
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // Calculate the y values for the start and end points of the estimate line
   const endY = Math.round(slopeOfEstimate * endX);
 
   return (
     <div className='mb-4'>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <LineChart width={500} height={300} data={data} margin={{ top: 10, right: 0, left: 0, bottom: 20 }}>
+      <LineChart 
+        width={chartDimensions.width} 
+        height={chartDimensions.height} 
+        data={data} 
+        margin={{ top: 10, right: 0, left: 0, bottom: 20 }}
+      >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis 
           dataKey="week" 

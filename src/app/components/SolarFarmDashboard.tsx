@@ -46,8 +46,22 @@ const SolarFarmDashboard: React.FC<SolarFarmDashboardProps> = ({ weeklyFarmCount
   const [isLoading, setIsLoading] = useState(false);
 
   const estimatedSlope = useMemo(() => {
-    const lastWeek = weeklyFarmCount[weeklyFarmCount.length - 1];
-    return Number(lastWeek.value) / (Number(lastWeek.week) - 16);
+    const startIndex = 16; // Start from the 17th entry (index 16)
+    const relevantData = weeklyFarmCount.slice(startIndex);
+    const n = relevantData.length;
+    let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+    
+    relevantData.forEach(({ week, value }, index) => {
+      const x = Number(week);
+      const y = Number(value);
+      sumX += x;
+      sumY += y;
+      sumXY += x * y;
+      sumX2 += x * x;
+    });
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    return slope;
   }, [weeklyFarmCount]);
 
   const avgProtocolFee = useMemo(() => {

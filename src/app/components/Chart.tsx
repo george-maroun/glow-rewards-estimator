@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar, ComposedChart } from 'recharts';
 import getDateFromWeek from '@/app/utils/getDateFromWeek';
 
@@ -29,14 +29,33 @@ const Chart: React.FC<{
   dataKeys: string[],
   colors: string[]
 }> = ({ title, data, chartType, dataKeys, colors }) => {
+  const [chartDimensions, setChartDimensions] = useState({ width: 500, height: 300 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 550) {
+        setChartDimensions({ width: 300, height: 230 });
+      } else {
+        setChartDimensions({ width: 500, height: 300 });
+      }
+    };
+
+    handleResize(); // Set initial dimensions
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const ChartComponent = chartType === 'line' ? LineChart : chartType === 'bar' ? BarChart : ComposedChart;
 
   return (
     <div className='mb-7'>
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       <ChartComponent 
-        width={500} 
-        height={300} 
+        width={chartDimensions.width} 
+        height={chartDimensions.height} 
         data={data}
         margin={{ top: 10, right: 0, left: 0, bottom: 20 }}
       >

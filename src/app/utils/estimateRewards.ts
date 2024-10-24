@@ -1,9 +1,10 @@
 import { InputData, ResultData, ProtocolFee } from '../types';
 import calculateProtocolFee from './calculateProtocolFee';
-import { AnnualEletricityPriceIncreasePerState } from '../constants'
+import { AnnualEletricityPriceIncreasePerState } from '../constants';
+import { ProtocolFeeModel } from './modelProtocolFee';
 
 // TODO: get the real values from the API for the bonding curve amount
-const BONDING_CURVE_AMOUNT = 4253757.18;
+const BONDING_CURVE_AMOUNT = 4283757.18;
 const TOTAL_WEEKS = 208;
 const WEEKLY_TOKEN_REWARDS = 175000;
 
@@ -16,6 +17,15 @@ function calculateUSDCReward(currentWeek: number, protocolFees: ProtocolFee[]): 
     .reduce((sum, fee) => sum + fee.protocolFee, 0);
 
   const totalRewardPool = BONDING_CURVE_AMOUNT + relevantFees;
+  // if (currentWeek === 60 || currentWeek === 61) {
+  //   console.log('totalRewardPool');
+  //   console.log(totalRewardPool);
+  //   console.log('relevantFees');
+  //   console.log(relevantFees);
+  //   console.log('BONDING_CURVE_AMOUNT');
+  //   console.log(BONDING_CURVE_AMOUNT);
+
+  // }
   return totalRewardPool / TOTAL_WEEKS;
 }
 
@@ -32,7 +42,7 @@ function extendProtocolFees(
   for (let week = lastRealWeek + 1; week <= endWeek; week++) {
     const estimatedNewFarms = estimatedSlope;
     const estimatedFee = estimatedNewFarms * avgProtocolFee;
-    extendedFees.push({ week, protocolFee: estimatedFee });
+    extendedFees.push({ week, protocolFee: avgProtocolFee });
   }
 
   return extendedFees;
@@ -70,8 +80,14 @@ function estimateRewards(input: any): any {
 
   const weeklyProtocolFee = protocolFee / 192;
 
-  // Convert and extend the protocol fees array
+  // Use ProtocolFeeModel to generate synthetic data
+  // const numWeeksToGenerate = endWeek - Math.max(...pastProtocolFees.map(fee => fee.week));
+  // const syntheticProtocolFees = ProtocolFeeModel.modelProtocolFees(pastProtocolFees, numWeeksToGenerate);
+  // const allProtocolFees = [...pastProtocolFees, ...syntheticProtocolFees];
+  // console.log({allProtocolFees});
+
   const extendedProtocolFees = extendProtocolFees(pastProtocolFees, endWeek, estimatedSlope, avgProtocolFee);
+
   // Initialize arrays to store weekly data
   const weeks: number[] = [];
   const numFarms: number[] = [];
