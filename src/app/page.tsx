@@ -4,13 +4,13 @@ import { ProtocolFee, RealProtocolFee } from './types';
 export const revalidate = 0;
 
 async function getData() {
-  const response = await fetch('https://glowstats.xyz/api/allData');
+  const response = await fetch('https://glowstats-api-production.up.railway.app/weeklyFarmCount');
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = await response.json();
 
-  return data.weeklyFarmCount;
+  return data;
 }
 
 const getWeeklyProtocolFees = async () => {
